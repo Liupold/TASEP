@@ -1,5 +1,9 @@
+MAKEFLAGS := --jobs=$(shell nproc)
+
 CC = gcc
-CFLAGS = -march=native -O2 -Wall -Wextra -Wpedantic -Ofast -fopenmp -Wconversion # -Werror
+CFLAGS = -march=native -O2 -Wall -Wextra -Wpedantic -Ofast -fopenmp -Wconversion \
+		 -std=c99 -pedantic -Wall -Wshadow -Wpointer-arith -Wcast-qual \
+		 -Wstrict-prototypes -Wdeclaration-after-statement# -Werror
 DIR_SRC = src
 DIR_LIB = lib
 DIR_BINs = bins

@@ -5,10 +5,10 @@ double *q_choice_1(TASEP_LAT *tlat) {
   double *q = (double *)calloc(tlat->N, sizeof(double));
   double dx = 1.0 / (double)(tlat->N - 1), x = 0;
   for (uint64_t k = 0; k < tlat->N; k++) {
-    if (x <= 0.5) {
-      q[k] = 1 / (1 + 2 * x);
+    if (x <= 0.7) {
+      q[k] = 0.5 * (2 - x*x/0.49);
     } else {
-      q[k] = 1 / (3 - 2 * x);
+      q[k] = 0.5 * (2 - (x - 1.4)*(x - 1.4)/0.49);
     }
     x += dx;
   }
