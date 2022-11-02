@@ -3,7 +3,7 @@
 double *rho_gen_data(uint64_t N, double alpha, double beta,
                      double *(*qf)(TASEP_LAT *), uint32_t r) {
   double *q;
-  double* rho;
+  double *rho;
   uint64_t step;
 
   TASEP_LAT tlat = tasep_init(N);
