@@ -1,7 +1,5 @@
 #include <stdint.h>
-#include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 
 typedef struct {
   const uint64_t N; // number of lattice sites.

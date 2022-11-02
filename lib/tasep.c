@@ -80,16 +80,16 @@ uint64_t tasep_stabilize(TASEP_LAT *tlat, double *q_array, double alpha,
 double *tasep_rho(TASEP_LAT *tlat, double *q_array, double alpha, double beta,
                   uint64_t avg_step, uint32_t *r) {
 
-  double *rho = (double *)calloc(tlat->N - 2, sizeof(double));
+  double *rho = (double *)calloc(tlat->N, sizeof(double));
 
   for (uint64_t step = 0; step < avg_step; step++) {
     tasep_evolve(tlat, q_array, alpha, beta, 1, r);
-    for (uint64_t k = 1; k < tlat->N - 1; k++) {
-      rho[k - 1] += tlat->C[k];
+    for (uint64_t k = 0; k < tlat->N; k++) {
+      rho[k] += tlat->C[k];
     }
   }
 
-  for (uint64_t k = 0; k < tlat->N - 1; k++) {
+  for (uint64_t k = 0; k < tlat->N; k++) {
     rho[k] = rho[k] / (double)avg_step;
   }
 

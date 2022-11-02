@@ -1,4 +1,5 @@
 #include "rho_gen_data.h"
+#include <stdio.h>
 
 double *q_choice_1(TASEP_LAT *tlat) {
   double *q = (double *)calloc(tlat->N, sizeof(double));
@@ -15,12 +16,24 @@ double *q_choice_1(TASEP_LAT *tlat) {
 }
 
 int main(void) {
-  uint32_t r = (uint32_t)time(0);
-  # pragma omp parallel for
-  for (uint32_t i=0; i < 100; i++) {
-     char buff[512];
-     snprintf(buff, 512, "raw_data/rho_q1/q_choice_1_a%f_b%f_%d.csv", 0.1, 0.7, r + 248420 * i);
-     rho_gen_data(1000, 0.1, 0.7, q_choice_1, buff, r + 248420 * i);
-     printf("%s\n", buff);
+  uint64_t N = 100;
+  uint32_t r = 138901483, seed_avg = 100;
+  double *rho_sum = (double *)calloc(N, sizeof(double));
+  double *rho;
+
+  double alpha = 0.1, beta = 0.7;
+
+#pragma omp parallel for
+  for (uint32_t i = 0; i < seed_avg; i++) {
+    rho = rho_gen_data(N, alpha, beta, q_choice_1, r + 248420 * i);
+    for (uint64_t k = 0; k < N; k++) {
+      rho_sum[k] += rho[k];
+    }
+    fprintf(stderr, "%u done!\n", i);
+    free(rho);
   }
+  for (uint64_t k = 0; k < N; k++) {
+    printf("%f\n", rho_sum[k] / seed_avg);
+  }
+  free(rho_sum);
 }

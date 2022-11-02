@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -O2 -Wall -Wextra -Wpedantic -Ofast -fopenmp -Wconversion # -Werror
+CFLAGS = -march=native -O2 -Wall -Wextra -Wpedantic -Ofast -fopenmp -Wconversion # -Werror
 DIR_SRC = src
 DIR_LIB = lib
 DIR_BINs = bins
@@ -10,7 +10,7 @@ src_progs := $(shell find $(DIR_SRC) -name '*.c' | sed "s/.*\//$(DIR_BINs)\//; s
 src: $(DIR_BINs) $(src_progs)
 
 $(DIR_LIB)/libtasep.so: $(DIR_LIB)/tasep.c
-	$(CC) $(CFLAGS) -I$(DIR_INCLUDE) -Werror -shared $(DIR_LIB)/tasep.c mtwister/mtwister.c -o $(DIR_LIB)/libtasep.so
+	$(CC) $(CFLAGS) -I$(DIR_INCLUDE) -Werror -shared $(DIR_LIB)/tasep.c -o $(DIR_LIB)/libtasep.so
 
 $(DIR_BINs)/%: $(DIR_SRC)/%.c $(DIR_LIB)/libtasep.so
 	$(CC) $(CFLAGS) -I$(DIR_INCLUDE) -L$(DIR_LIB)  $< -l:libtasep.so -Wl,-rpath=$(realpath $(DIR_LIB)) -o $@
