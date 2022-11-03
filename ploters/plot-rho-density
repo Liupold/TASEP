@@ -1,0 +1,39 @@
+#!/usr/bin/python3
+from sys import argv
+import os
+import numpy as np
+from matplotlib import pyplot as plt
+
+if len(argv) < 2:
+    print(f"Useage: {argv[0]} <filename>")
+    exit(1)
+
+filename = argv[1]
+print(f"Reading From: \"{filename}\"")
+base_filename = os.path.basename(filename)
+params = base_filename[:-4].split('_')
+
+q = int(params[1].split('-')[-1])
+N = int(params[2].split('-')[-1])
+alpha = float(params[3].split('-')[-1])
+beta = float(params[4].split('-')[-1])
+avg = int(params[5].split('-')[-1])
+
+print(f"read: q = {q}, N = {N}, " +
+      f"alpha = {alpha}, beta = {beta}, avg = {avg}")
+
+resp = input("Continue? [y/N]: ")
+if (resp != "y"):
+    exit(2)
+dataset = np.loadtxt(filename, delimiter=",")
+plt.plot(dataset[:, 0], dataset[:, 1], label=f"$q_{q}(x)$")
+plt.plot(dataset[:, 0], dataset[:, 2], label=fr"$\rho(x)$")
+
+plt.title(fr"L = {N}, $\alpha = {alpha}$, $\beta = {beta}$ [avg of {avg} seeds]")
+
+plt.xlim([0, 1])
+plt.ylim([0, 1])
+plt.grid()
+plt.legend()
+
+plt.show()
