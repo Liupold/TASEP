@@ -22,9 +22,17 @@ avg = int(params[5].split('-')[-1])
 print(f"read: q = {q}, N = {N}, " +
       f"alpha = {alpha}, beta = {beta}, avg = {avg}")
 
+save_filename = f"plots/rho-density_q-{q}_N-{N}_alpha-{alpha}_beta-{beta}_avg-{avg}.pdf"
+save_to_file = True
+
 resp = input("Continue? [y/N]: ")
 if (resp != "y"):
     exit(2)
+
+resp = input("Save to file? [y/N]: ")
+if (resp != "y"):
+    save_to_file = False
+
 dataset = np.loadtxt(filename, delimiter=",")
 plt.plot(dataset[:, 0], dataset[:, 1], label=f"$q_{q}(x)$")
 plt.plot(dataset[:, 0], dataset[:, 2], label=fr"$\rho(x)$")
@@ -36,4 +44,8 @@ plt.ylim([0, 1])
 plt.grid()
 plt.legend()
 
-plt.show()
+if save_to_file:
+    print("Saving to:", save_filename)
+    plt.savefig(save_filename)
+else:
+    plt.show()
