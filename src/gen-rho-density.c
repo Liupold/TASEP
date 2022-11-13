@@ -1,23 +1,8 @@
 #include "tasep.h"
+#include "q_func.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-double q1(double x) {
-  if (x <= 0.5) {
-    return 1 / (1 + 2 * x);
-  } else {
-    return 1 / (3 - 2 * x);
-  }
-}
-
-double q2(double x) {
-  if (x <= 0.7) {
-    return 0.5 * (2 - x * x / 0.49);
-  } else {
-    return 0.5 * (2 - (x - 1.4) * (x - 1.4) / 0.49);
-  }
-}
 
 double *rho_gen_data(uint64_t N, double alpha, double beta, double *q,
                      uint32_t r) {
@@ -38,11 +23,12 @@ void help(void) {
       "\nGenerate rho-density data from TASEP model for given alpha, beta.\n");
   printf("\nWriten By: Rohn Chatterjee  (https://github.com/liupold)\n\n");
 
-  printf("-dir <Path>\tdir/folder.\t(default = data)\n");
-  printf("-N <Integer>\tLattice Size.\t(default = 100 )\n");
-  printf("-q <Integer>\tq func number.\t(default = 1   )\n");
-  printf("-alpha <float>\tvalue of alpha.\t(default = 0.1 )\n");
-  printf("-beta  <float>\tvalue of beta.\t(default = 0.7 )\n");
+  printf("-dir <Path>\tdir/folder\t(default = data)\n");
+  printf("-N <Integer>\tLattice Size\t(default = 100 )\n");
+  printf("-q <Integer>\tq func number\t(default = 1   )\n");
+  printf("-avg <Integer>\tseed avg num\t(default = 100 )\n");
+  printf("-alpha <float>\tvalue of alpha\t(default = 0.1 )\n");
+  printf("-beta  <float>\tvalue of beta\t(default = 0.7 )\n");
   printf("-help \t\tshow this message!\n");
 }
 
@@ -57,6 +43,11 @@ int main(int argc, char **argv) {
   for (int i = 0; i < argc; i++) {
     if (strcmp(argv[i], "-q") == 0) {
       q_num = (uint32_t)strtoul(argv[i + 1], NULL, 10);
+      i++;
+      continue;
+    };
+    if (strcmp(argv[i], "-avg") == 0) {
+      seed_avg = (uint32_t)strtoul(argv[i + 1], NULL, 10);
       i++;
       continue;
     };
@@ -90,11 +81,9 @@ int main(int argc, char **argv) {
     };
   }
 
-  if (q_num == 1) {
-    qf = q1;
-  } else if (q_num == 2) {
-    qf = q2;
-  } else {
+  qf = choose_q(q_num);
+
+  if (qf == NULL) {
     fprintf(stderr, "Invalid q number!");
     return 3;
   }
