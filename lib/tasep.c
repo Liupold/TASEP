@@ -34,14 +34,11 @@ void tasep_evolve(TASEP_LAT *tlat, double *q_array, double alpha, double beta,
       // entry
       if ((i == 0) && (tlat->C[0] == 0) && (urand < alpha)) {
         tlat->C[0] = 1;
-      }
-      // exit
-      if ((i == last) && (tlat->C[last] == 1) && (urand < beta)) {
-        tlat->C[last] = 0;
-        continue;
-      }
-      // hop
-      if ((tlat->C[i] == 1) && (tlat->C[i + 1] == 0) && (urand < q_array[i])) {
+      } else if (i == last) {
+        if ((tlat->C[last] == 1) && (urand < beta)) {
+          tlat->C[last] = 0;
+        }
+      } else if ((tlat->C[i] == 1) && (tlat->C[i + 1] == 0) && (urand < q_array[i])) {
         tlat->C[i] = 0;
         tlat->C[i + 1] = 1;
       }
